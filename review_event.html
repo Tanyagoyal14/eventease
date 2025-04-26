@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Review Event - {{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Review Event Proposal</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5>Event Details</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th>Title:</th>
+                                    <td>{{ event.title }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Proposed By:</th>
+                                    <td>{{ event.creator.username }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date:</th>
+                                    <td>{{ event.date.strftime('%B %d, %Y at %I:%M %p') }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Venue:</th>
+                                    <td>{{ event.venue }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Max Participants:</th>
+                                    <td>{{ event.max_participants }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Proposed On:</th>
+                                    <td>{{ event.created_at.strftime('%B %d, %Y at %I:%M %p') }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5>Description</h5>
+                        <p>{{ event.description }}</p>
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('review_event', event_id=event.id) }}">
+                        <div class="mb-3">
+                            <label for="comments" class="form-label">Review Comments</label>
+                            <textarea class="form-control" id="comments" name="comments" rows="4"
+                                      placeholder="Enter your review comments..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" name="action" value="approve" class="btn btn-success">
+                                <i class="fas fa-check"></i> Approve Event
+                            </button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger">
+                                <i class="fas fa-times"></i> Reject Event
+                            </button>
+                            <a href="{{ url_for('review_events') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back to Reviews
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

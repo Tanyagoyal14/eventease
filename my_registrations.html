@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}My Registrations - EventEase{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>My Registrations</h2>
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Events -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Upcoming Events</h4>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_registrations %}
+                        <div class="list-group">
+                            {% for reg in upcoming_registrations %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ reg.event.title }}</h5>
+                                        <small>Registered on: {{ reg.registration_date.strftime('%B %d, %Y') }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ reg.event.description|truncate(150) }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small>
+                                            <i class="fas fa-calendar"></i>
+                                            {{ reg.event.date.strftime('%B %d, %Y at %I:%M %p') }}
+                                            <i class="fas fa-map-marker-alt ms-2"></i>
+                                            {{ reg.event.venue }}
+                                        </small>
+                                        <div class="btn-group">
+                                            <a href="{{ url_for('event_details', event_id=reg.event.id) }}" class="btn btn-sm btn-primary">
+                                                View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            You haven't registered for any upcoming events.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Past Events -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Past Events</h4>
+                </div>
+                <div class="card-body">
+                    {% if past_registrations %}
+                        <div class="list-group">
+                            {% for reg in past_registrations %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ reg.event.title }}</h5>
+                                        <small>Attended on: {{ reg.event.date.strftime('%B %d, %Y') }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ reg.event.description|truncate(150) }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small>
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            {{ reg.event.venue }}
+                                        </small>
+                                        <div class="btn-group">
+                                            <a href="{{ url_for('event_details', event_id=reg.event.id) }}" class="btn btn-sm btn-primary">
+                                                View Details
+                                            </a>
+                                            {% if reg.attendance %}
+                                                <a href="{{ url_for('submit_feedback', event_id=reg.event.id) }}" class="btn btn-sm btn-info">
+                                                    Submit Feedback
+                                                </a>
+                                                <a href="{{ url_for('request_certificate', event_id=reg.event.id) }}" class="btn btn-sm btn-warning">
+                                                    Request Certificate
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            You haven't attended any events yet.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

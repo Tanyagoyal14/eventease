@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to EventEase{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4">Welcome to EventEase</h1>
+            <p class="lead mb-4">Your one-stop platform for managing university events</p>
+            
+            {% if not current_user.is_authenticated %}
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg px-4 gap-3">Login</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="card-title">For Students</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✓ Propose new events</li>
+                        <li class="mb-2">✓ Register for events</li>
+                        <li class="mb-2">✓ Submit feedback</li>
+                        <li class="mb-2">✓ Request certificates</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="card-title">For Faculty</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✓ Review event proposals</li>
+                        <li class="mb-2">✓ Assign mentors</li>
+                        <li class="mb-2">✓ View event reports</li>
+                        <li class="mb-2">✓ Monitor feedback</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h3 class="card-title">For Administrators</h3>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">✓ Manage venues</li>
+                        <li class="mb-2">✓ Oversee logistics</li>
+                        <li class="mb-2">✓ Generate reports</li>
+                        <li class="mb-2">✓ View statistics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Upcoming Events</h3>
+                    {% if events %}
+                        <div class="list-group">
+                            {% for event in events %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ event.title }}</h5>
+                                        <small class="text-muted">{{ event.date.strftime('%Y-%m-%d %H:%M') }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ event.description }}</p>
+                                    <small class="text-muted">Venue: {{ event.venue }}</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-center">No upcoming events at the moment.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

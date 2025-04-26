@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Admin Dashboard</h1>
+    
+    <!-- Venue Management -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Venue Management</h5>
+        </div>
+        <div class="card-body">
+            <form id="venueForm" class="mb-3">
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" name="name" placeholder="Venue Name" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" name="capacity" placeholder="Capacity" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" name="facilities" placeholder="Facilities" required>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-control" name="status" required>
+                            <option value="available">Available</option>
+                            <option value="booked">Booked</option>
+                            <option value="maintenance">Under Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Add Venue</button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Capacity</th>
+                            <th>Facilities</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for venue in venues %}
+                        <tr>
+                            <td>{{ venue.name }}</td>
+                            <td>{{ venue.capacity }}</td>
+                            <td>{{ venue.facilities }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if venue.status == 'available' else 'warning' if venue.status == 'booked' else 'danger' }}">
+                                    {{ venue.status }}
+                                </span>
+                            </td>
+                            <td>{{ venue.created_at.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overseas Logistics -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Overseas Event Logistics</h5>
+        </div>
+        <div class="card-body">
+            <form id="overseasForm" class="mb-3">
+                <div class="row">
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="country" placeholder="Country" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="city" placeholder="City" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="venue" placeholder="Venue" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="travel" placeholder="Travel Arrangements" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="accommodation" placeholder="Accommodation" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Add Logistics</button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Country</th>
+                            <th>City</th>
+                            <th>Venue</th>
+                            <th>Travel</th>
+                            <th>Accommodation</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for logistics in overseas_logistics %}
+                        <tr>
+                            <td>{{ logistics.country }}</td>
+                            <td>{{ logistics.city }}</td>
+                            <td>{{ logistics.venue }}</td>
+                            <td>{{ logistics.travel_arrangements }}</td>
+                            <td>{{ logistics.accommodation }}</td>
+                            <td>{{ logistics.created_at.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sound Systems -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Sound System Management</h5>
+        </div>
+        <div class="card-body">
+            <form id="soundForm" class="mb-3">
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" name="system" placeholder="System Type" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" name="location" placeholder="Location" required>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" name="status" required>
+                            <option value="available">Available</option>
+                            <option value="in_use">In Use</option>
+                            <option value="maintenance">Under Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary">Add Sound System</button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>System Type</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for system in sound_systems %}
+                        <tr>
+                            <td>{{ system.system_type }}</td>
+                            <td>{{ system.location }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if system.status == 'available' else 'warning' if system.status == 'in_use' else 'danger' }}">
+                                    {{ system.status }}
+                                </span>
+                            </td>
+                            <td>{{ system.created_at.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Catering -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Catering Management</h5>
+        </div>
+        <div class="card-body">
+            <form id="cateringForm" class="mb-3">
+                <div class="row">
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="catering" placeholder="Catering Type" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="menu" placeholder="Menu Type" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" name="guests" placeholder="Guest Count" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="requirements" placeholder="Special Requirements">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Add Catering</button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Catering Type</th>
+                            <th>Menu Type</th>
+                            <th>Guest Count</th>
+                            <th>Special Requirements</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for catering in catering_plans %}
+                        <tr>
+                            <td>{{ catering.catering_type }}</td>
+                            <td>{{ catering.menu_type }}</td>
+                            <td>{{ catering.guest_count }}</td>
+                            <td>{{ catering.special_requirements }}</td>
+                            <td>{{ catering.created_at.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Security Management</h5>
+        </div>
+        <div class="card-body">
+            <form id="securityForm" class="mb-3">
+                <div class="row">
+                    <div class="col-md-2">
+                        <select class="form-control" name="level" required>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" name="personnel" placeholder="Personnel Count" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" name="equipment" placeholder="Equipment (comma separated)" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" name="plan" placeholder="Security Plan" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Add Security Plan</button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Security Level</th>
+                            <th>Personnel Count</th>
+                            <th>Equipment</th>
+                            <th>Security Plan</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for security in security_plans %}
+                        <tr>
+                            <td>
+                                <span class="badge badge-{{ 'success' if security.security_level == 'low' else 'warning' if security.security_level == 'medium' else 'danger' }}">
+                                    {{ security.security_level }}
+                                </span>
+                            </td>
+                            <td>{{ security.personnel_count }}</td>
+                            <td>{{ security.equipment }}</td>
+                            <td>{{ security.security_plan }}</td>
+                            <td>{{ security.created_at.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Venue Form Handler
+    document.getElementById('venueForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch('/api/venues', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.fromEntries(formData))
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    });
+
+    // Overseas Logistics Form Handler
+    document.getElementById('overseasForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch('/api/overseas-logistics', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.fromEntries(formData))
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    });
+
+    // Sound System Form Handler
+    document.getElementById('soundForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch('/api/sound-systems', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.fromEntries(formData))
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    });
+
+    // Catering Form Handler
+    document.getElementById('cateringForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        fetch('/api/catering', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.fromEntries(formData))
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    });
+
+    // Security Form Handler
+    document.getElementById('securityForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+        data.equipment = data.equipment.split(',').map(item => item.trim());
+        
+        fetch('/api/security', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

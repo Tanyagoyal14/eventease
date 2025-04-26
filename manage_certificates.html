@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Certificates - EventEase{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Manage Certificate Requests</h2>
+                <a href="{{ url_for('faculty_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Pending Requests</h4>
+                </div>
+                <div class="card-body">
+                    {% if pending_requests %}
+                        <div class="list-group">
+                            {% for request in pending_requests %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ request.event.title }}</h5>
+                                        <small>Requested on: {{ request.request_date.strftime('%B %d, %Y') }}</small>
+                                    </div>
+                                    <p class="mb-1">
+                                        <strong>Student:</strong> {{ request.user.username }}<br>
+                                        <strong>Event Date:</strong> {{ request.event.date.strftime('%B %d, %Y at %I:%M %p') }}
+                                    </p>
+                                    <div class="mt-2">
+                                        <form action="{{ url_for('approve_certificate', request_id=request.id) }}" method="POST" class="d-inline">
+                                            <div class="mb-2">
+                                                <textarea name="comments" class="form-control" rows="2" placeholder="Approval comments (optional)"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                        </form>
+                                        <form action="{{ url_for('reject_certificate', request_id=request.id) }}" method="POST" class="d-inline ms-2">
+                                            <div class="mb-2">
+                                                <textarea name="comments" class="form-control" rows="2" placeholder="Rejection comments (optional)"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="fas fa-times"></i> Reject
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            No pending certificate requests.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approved Requests -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Approved Certificates</h4>
+                </div>
+                <div class="card-body">
+                    {% if approved_requests %}
+                        <div class="list-group">
+                            {% for request in approved_requests %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ request.event.title }}</h5>
+                                        <small>Approved on: {{ request.approval_date.strftime('%B %d, %Y') }}</small>
+                                    </div>
+                                    <p class="mb-1">
+                                        <strong>Student:</strong> {{ request.user.username }}<br>
+                                        <strong>Event Date:</strong> {{ request.event.date.strftime('%B %d, %Y at %I:%M %p') }}<br>
+                                        <strong>Approved by:</strong> {{ request.approver.username }}
+                                    </p>
+                                    {% if request.approval_comments %}
+                                        <p class="mb-1"><strong>Comments:</strong> {{ request.approval_comments }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            No approved certificates.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rejected Requests -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Rejected Requests</h4>
+                </div>
+                <div class="card-body">
+                    {% if rejected_requests %}
+                        <div class="list-group">
+                            {% for request in rejected_requests %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ request.event.title }}</h5>
+                                        <small>Rejected on: {{ request.approval_date.strftime('%B %d, %Y') }}</small>
+                                    </div>
+                                    <p class="mb-1">
+                                        <strong>Student:</strong> {{ request.user.username }}<br>
+                                        <strong>Event Date:</strong> {{ request.event.date.strftime('%B %d, %Y at %I:%M %p') }}<br>
+                                        <strong>Rejected by:</strong> {{ request.approver.username }}
+                                    </p>
+                                    {% if request.approval_comments %}
+                                        <p class="mb-1"><strong>Comments:</strong> {{ request.approval_comments }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            No rejected requests.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

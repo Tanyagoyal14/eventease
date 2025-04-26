@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}My Certificates - EventEase{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>My Certificate Requests</h2>
+                <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if certificate_requests %}
+        <div class="row">
+            {% for request in certificate_requests %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">{{ request.event.title }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <p><strong>Event Date:</strong> {{ request.event.date.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                                <p><strong>Request Date:</strong> {{ request.request_date.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                                <p><strong>Status:</strong> 
+                                    <span class="badge {% if request.status == 'approved' %}bg-success{% elif request.status == 'rejected' %}bg-danger{% else %}bg-warning{% endif %}">
+                                        {{ request.status|title }}
+                                    </span>
+                                </p>
+                                {% if request.approval_date %}
+                                    <p><strong>Approval Date:</strong> {{ request.approval_date.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                                {% endif %}
+                                {% if request.approval_comments %}
+                                    <p><strong>Comments:</strong> {{ request.approval_comments }}</p>
+                                {% endif %}
+                            </div>
+                            
+                            {% if request.status == 'approved' %}
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle"></i> Certificate approved
+                                </div>
+                            {% elif request.status == 'rejected' %}
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-times-circle"></i> Certificate request rejected
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-clock"></i> Request pending approval
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            You haven't requested any certificates yet.
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

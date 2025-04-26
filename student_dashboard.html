@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - EventEase{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Welcome, {{ current_user.username }}!</h2>
+    <div class="row mt-4">
+        <!-- Quick Actions -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('propose_event') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Propose New Event
+                        </a>
+                        <a href="{{ url_for('view_events') }}" class="btn btn-success">
+                            <i class="fas fa-calendar"></i> View Available Events
+                        </a>
+                        <a href="{{ url_for('my_registrations') }}" class="btn btn-info">
+                            <i class="fas fa-list"></i> My Registrations
+                        </a>
+                        <a href="{{ url_for('request_certificate') }}" class="btn btn-warning">
+                            <i class="fas fa-certificate"></i> Request Certificate
+                        </a>
+                        <a href="{{ url_for('my_certificates') }}" class="btn btn-secondary">
+                            <i class="fas fa-file-certificate"></i> My Certificates
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Upcoming Events</h5>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_events %}
+                        <div class="list-group">
+                            {% for event in upcoming_events %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">{{ event.title }}</h5>
+                                        <small>{{ event.date.strftime('%B %d, %Y') }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ event.description }}</p>
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('register_for_event', event_id=event.id) }}" class="btn btn-sm btn-primary">Register</a>
+                                        <a href="{{ url_for('event_details', event_id=event.id) }}" class="btn btn-sm btn-secondary">Details</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No upcoming events available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Feedback -->
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Feedback</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_feedback %}
+                        <div class="list-group">
+                            {% for feedback in recent_feedback %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ feedback.event.title }}</h6>
+                                        <small>{{ feedback.submission_date.strftime('%B %d, %Y') }}</small>
+                                    </div>
+                                    <p class="mb-1">Rating: {{ feedback.rating }}/5</p>
+                                    <p class="mb-1">{{ feedback.comment }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No feedback submitted yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

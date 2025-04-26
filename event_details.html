@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.title }} - EventEase{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>{{ event.title }}</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Debug Information -->
+                    {% if current_user.role == 'student' %}
+                        <div class="alert alert-info">
+                            <p>Debug Information:</p>
+                            <p>Event Date: {{ event.date }}</p>
+                            <p>Current Time: {{ now }}</p>
+                            <p>Is Event Past: {{ event.date <= now }}</p>
+                            <p>Is Registered: {{ is_registered }}</p>
+                            {% if registration %}
+                                <p>Has Registration: Yes</p>
+                                <p>Attendance Status: {{ registration.attendance }}</p>
+                            {% else %}
+                                <p>Has Registration: No</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-4">
+                        <h5>Event Details</h5>
+                        <p><strong>Date:</strong> {{ event.date.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                        <p><strong>Venue:</strong> {{ event.venue }}</p>
+                        <p><strong>Maximum Participants:</strong> {{ event.max_participants }}</p>
+                        <p><strong>Current Registrations:</strong> {{ event.registrations|length }}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5>Description</h5>
+                        <p>{{ event.description }}</p>
+                    </div>
+                    
+                    {% if current_user.role == 'student' %}
+                        <div class="mb-4">
+                            <h5>Registration</h5>
+                            {% if is_registered %}
+                                <div class="alert alert-info">
+                                    You are registered for this event.
+                                </div>
+                                {% if not registration.attendance %}
+                                    <form action="{{ url_for('mark_attendance', event_id=event.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-check-circle"></i> Mark Attendance
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-check-circle"></i> Attendance marked
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                {% if event.registrations|length >= event.max_participants %}
+                                    <div class="alert alert-warning">
+                                        This event is full.
+                                    </div>
+                                {% else %}
+                                    <form action="{{ url_for('register_for_event', event_id=event.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-primary">Register for Event</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        {% if current_user.role == 'student' %}
+                            {% if is_registered and registration.attendance %}
+                                <a href="{{ url_for('submit_feedback', event_id=event.id) }}" class="btn btn-info">
+                                    Submit Feedback
+                                </a>
+                                <a href="{{ url_for('request_certificate', event_id=event.id) }}" class="btn btn-warning">
+                                    Request Certificate
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        <a href="{{ url_for('view_events') }}" class="btn btn-secondary">
+                            Back to Events
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

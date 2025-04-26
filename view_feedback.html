@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}View Feedback - EventEase{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Event Feedback</h2>
+                <a href="{{ url_for('faculty_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if feedback.items %}
+        <div class="row">
+            {% for entry in feedback.items %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">{{ entry.event.title }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <p><strong>Date:</strong> {{ entry.event.date.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                                <p><strong>Submitted by:</strong> {{ entry.user.username }}</p>
+                                <p><strong>Rating:</strong> 
+                                    {% for i in range(5) %}
+                                        {% if i < entry.rating %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star text-warning"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                                {% if entry.comment %}
+                                    <p><strong>Comment:</strong></p>
+                                    <p class="text-muted">{{ entry.comment }}</p>
+                                {% endif %}
+                                <small class="text-muted">Submitted on: {{ entry.submission_date.strftime('%B %d, %Y at %I:%M %p') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Feedback pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if feedback.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('view_feedback', page=feedback.prev_num) }}">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </span>
+                    </li>
+                {% endif %}
+
+                {% for page_num in feedback.iter_pages() %}
+                    {% if page_num %}
+                        <li class="page-item {% if page_num == feedback.page %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('view_feedback', page=page_num) }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if feedback.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('view_feedback', page=feedback.next_num) }}">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            No feedback has been submitted yet.
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Assign Mentors - EventEase{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Assign Mentors to Events</h2>
+                <a href="{{ url_for('faculty_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if events %}
+        <div class="row">
+            {% for event in events %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">{{ event.title }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <p><strong>Date:</strong> {{ event.date.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                                <p><strong>Venue:</strong> {{ event.venue }}</p>
+                                <p><strong>Max Participants:</strong> {{ event.max_participants }}</p>
+                            </div>
+                            
+                            <form method="POST" action="{{ url_for('assign_event_mentor', event_id=event.id) }}">
+                                <div class="mb-3">
+                                    <label for="mentor_{{ event.id }}" class="form-label">Select Mentor</label>
+                                    <select class="form-select" id="mentor_{{ event.id }}" name="mentor_id" required>
+                                        <option value="">Choose a mentor...</option>
+                                        {% for mentor in mentors %}
+                                            <option value="{{ mentor.id }}">
+                                                {{ mentor.username }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-user-plus"></i> Assign Mentor
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            No events require mentor assignment at this time.
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 
